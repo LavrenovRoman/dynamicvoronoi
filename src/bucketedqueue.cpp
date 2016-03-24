@@ -59,6 +59,9 @@ INTPOINT BucketPrioQueue::pop() {
   return p;
 }
 
+int BucketPrioQueue::size() {
+	return buckets.size();
+}
 
 void BucketPrioQueue::initSqrIndices() {
   //    std::cout << "BUCKETQUEUE Starting to build the index array...\n";

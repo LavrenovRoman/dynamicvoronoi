@@ -30,6 +30,8 @@ public:
   void push(int prio, INTPOINT t);
   //! return and pop the element with the lowest squared distance */
   INTPOINT pop();
+  //! return size of buckets
+  int size();
 
 private:
   

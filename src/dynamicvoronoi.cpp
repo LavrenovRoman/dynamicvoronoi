@@ -1,3 +1,4 @@
+#include <ros/ros.h>
 #include "dynamicvoronoi.h"
 
 #include <math.h>
@@ -152,8 +153,13 @@ void DynamicVoronoi::exchangeObstacles(std::vector<INTPOINT> points) {
 
 void DynamicVoronoi::update(bool updateRealDist) {
 
+  ros::Time t = ros::Time::now();
+  ROS_INFO("voronoi --> commitAndColorize, open: %d size", open.size());
   commitAndColorize(updateRealDist);
+  ROS_INFO("Time (for commitAndColorize): %f sec", (ros::Time::now() - t).toSec());
+  t = ros::Time::now();
 
+  ROS_INFO("voronoi --> open do empty: %d size", open.size());
   while (!open.empty()) {
     INTPOINT p = open.pop();
     int x = p.x;
@@ -237,6 +243,8 @@ void DynamicVoronoi::update(bool updateRealDist) {
     }
     data[x][y] = c;
   }
+  ROS_INFO("Time (for BucketPrioQueue do empty): %f sec", (ros::Time::now() - t).toSec());
+  t = ros::Time::now();
 }
 
 float DynamicVoronoi::getDistance( int x, int y ) {

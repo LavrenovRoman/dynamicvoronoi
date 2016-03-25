@@ -1,3 +1,4 @@
+#include <ros/ros.h>
 #include "bucketedqueue.h"
 
 #include "limits.h"
@@ -9,6 +10,7 @@ int BucketPrioQueue::numBuckets;
 
 
 BucketPrioQueue::BucketPrioQueue() {
+  ROS_INFO("BucketPrioQueue::BucketPrioQueue(), numBuckets: %d size", numBuckets);
   // make sure the index array is created
   if (sqrIndices.size()==0) initSqrIndices();
   nextBucket = INT_MAX;
@@ -19,6 +21,7 @@ BucketPrioQueue::BucketPrioQueue() {
 
   // reset element counter 
   count = 0;
+  ROS_INFO("BucketPrioQueue::BucketPrioQueue()~, numBuckets: %d size", numBuckets);
 }
 
 bool BucketPrioQueue::empty() {
@@ -29,6 +32,8 @@ bool BucketPrioQueue::empty() {
 void BucketPrioQueue::push(int prio, INTPOINT t) {
   if (prio>=(int)sqrIndices.size()) {
     fprintf(stderr, "error: priority %d is not a valid squared distance x*x+y*y, or x>MAXDIST or y>MAXDIST.\n", prio);
+    //fprintf(stderr, "x %d \n", t.x);
+    //fprintf(stderr, "y %d \n", t.y);
     exit(-1);
   }
   int id = sqrIndices[prio];
@@ -63,7 +68,20 @@ int BucketPrioQueue::size() {
 	return buckets.size();
 }
 
+int BucketPrioQueue::all_size() {
+	int allsize = 0;
+	for (int i=0; i<buckets.size(); ++i)
+	{
+		allsize += buckets[i].size();
+	}
+	return allsize;
+}
+
 void BucketPrioQueue::initSqrIndices() {
+  //int size_ = buckets.size();
+  //ROS_INFO("BucketPrioQueue::initSqrIndices(), numBuckets: %d size", numBuckets);
+  //ROS_INFO("BucketPrioQueue::initSqrIndices(), MAXDIST: %d", MAXDIST);
+  //ROS_INFO("buckets, size: %d size", size_);
   //    std::cout << "BUCKETQUEUE Starting to build the index array...\n";
   //  std::set<int> sqrNumbers;
 
@@ -78,4 +96,7 @@ void BucketPrioQueue::initSqrIndices() {
   }
   numBuckets = count;
   //    std::cout << "BUCKETQUEUE Done with building the index arrays.\n";
+  //size_ = buckets.size();
+  //ROS_INFO("BucketPrioQueue::initSqrIndices(), numBuckets: %d size", numBuckets);
+  //ROS_INFO("buckets, size: %d size", size_);
 }

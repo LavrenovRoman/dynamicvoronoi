@@ -5,6 +5,7 @@
 #include <iostream>
 
 DynamicVoronoi::DynamicVoronoi() {
+  ROS_INFO("DynamicVoronoi::DynamicVoronoi()\n");
   sqrt2 = sqrt(2.0);
   data = NULL;
   gridMap = NULL;
@@ -22,6 +23,7 @@ DynamicVoronoi::~DynamicVoronoi() {
 }
 
 void DynamicVoronoi::initializeEmpty(int _sizeX, int _sizeY, bool initGridMap) {
+  ROS_INFO("DynamicVoronoi::initializeEmpty()\n");
   sizeX = _sizeX;
   sizeY = _sizeY;
   if (data) {
@@ -59,6 +61,7 @@ void DynamicVoronoi::initializeEmpty(int _sizeX, int _sizeY, bool initGridMap) {
 }
 
 void DynamicVoronoi::initializeMap(int _sizeX, int _sizeY, bool** _gridMap) {
+  ROS_INFO("DynamicVoronoi::initializeMap()\n");
   gridMap = _gridMap;
   initializeEmpty(_sizeX, _sizeY, false);
 
@@ -129,7 +132,7 @@ void DynamicVoronoi::removeObstacle(int x, int y) {
 }
 
 void DynamicVoronoi::exchangeObstacles(std::vector<INTPOINT> points) {
-
+  ROS_INFO("DynamicVoronoi::exchangeObstacles()\n");
   for (unsigned int i=0; i<lastObstacles.size(); i++) {
     int x = lastObstacles[i].x;
     int y = lastObstacles[i].y;
@@ -152,7 +155,8 @@ void DynamicVoronoi::exchangeObstacles(std::vector<INTPOINT> points) {
 }
 
 void DynamicVoronoi::update(bool updateRealDist) {
-
+  ROS_INFO("DynamicVoronoi::update()\n");
+  
   ros::Time t = ros::Time::now();
   ROS_INFO("voronoi --> commitAndColorize, open: %d size", open.size());
   commitAndColorize(updateRealDist);
@@ -160,8 +164,10 @@ void DynamicVoronoi::update(bool updateRealDist) {
   t = ros::Time::now();
 
   ROS_INFO("voronoi --> open do empty: %d size", open.size());
+  ROS_INFO("voronoi --> open do empty: %d all size", open.all_size());
   while (!open.empty()) {
     INTPOINT p = open.pop();
+    //ROS_INFO("voronoi --> open do: %d size", open.size());
     int x = p.x;
     int y = p.y;
     dataCell c = data[x][y];
@@ -259,6 +265,9 @@ bool DynamicVoronoi::isVoronoi( int x, int y ) {
 
 
 void DynamicVoronoi::commitAndColorize(bool updateRealDist) {
+  
+  ROS_INFO("DynamicVoronoi::commitAndColorize()\n");
+  
   // ADD NEW OBSTACLES
   for (unsigned int i=0; i<addList.size(); i++) {
     INTPOINT p = addList[i];
@@ -299,20 +308,22 @@ void DynamicVoronoi::commitAndColorize(bool updateRealDist) {
 
 void DynamicVoronoi::checkVoro(int x, int y, int nx, int ny, dataCell& c, dataCell& nc) {
 
+  int dxy_x, dxy_y, sqdxy, stability_xy;
+  int dnxy_x, dnxy_y, sqdnxy, stability_nxy;
   if ((c.sqdist>1 || nc.sqdist>1) && nc.obstX!=invalidObstData) { 
     if (abs(c.obstX-nc.obstX) > 1 || abs(c.obstY-nc.obstY) > 1) {
       //compute dist from x,y to obstacle of nx,ny	 
-      int dxy_x = x-nc.obstX;
-      int dxy_y = y-nc.obstY;
-      int sqdxy = dxy_x*dxy_x + dxy_y*dxy_y;
-      int stability_xy = sqdxy - c.sqdist;
+      dxy_x = x-nc.obstX;
+      dxy_y = y-nc.obstY;
+      sqdxy = dxy_x*dxy_x + dxy_y*dxy_y;
+      stability_xy = sqdxy - c.sqdist;
       if (sqdxy - c.sqdist<0) return;
 
       //compute dist from nx,ny to obstacle of x,y
-      int dnxy_x = nx - c.obstX;
-      int dnxy_y = ny - c.obstY;
-      int sqdnxy = dnxy_x*dnxy_x + dnxy_y*dnxy_y;
-      int stability_nxy = sqdnxy - nc.sqdist;
+      dnxy_x = nx - c.obstX;
+      dnxy_y = ny - c.obstY;
+      sqdnxy = dnxy_x*dnxy_x + dnxy_y*dnxy_y;
+      stability_nxy = sqdnxy - nc.sqdist;
       if (sqdnxy - nc.sqdist <0) return;
 
       //which cell is added to the Voronoi diagram?
@@ -365,6 +376,8 @@ bool DynamicVoronoi::isOccupied(int &x, int &y, dataCell &c) {
 
 void DynamicVoronoi::visualize(const char *filename) {
   // write pgm files
+    
+  ROS_INFO("DynamicVoronoi::visualize()\n");
 
   FILE* F = fopen(filename, "w");
   if (!F) {
@@ -401,6 +414,9 @@ void DynamicVoronoi::visualize(const char *filename) {
 
 
 void DynamicVoronoi::prune() {
+	
+  ROS_INFO("DynamicVoronoi::prune()\n");
+	
   // filler
   while(!pruneQueue.empty()) {
     INTPOINT p = pruneQueue.front();
@@ -497,6 +513,9 @@ void DynamicVoronoi::prune() {
 
 
 DynamicVoronoi::markerMatchResult DynamicVoronoi::markerMatch(int x, int y) {
+		
+  ROS_INFO("DynamicVoronoi::markerMatch()\n");
+	
   // implementation of connectivity patterns
   bool f[8];
 

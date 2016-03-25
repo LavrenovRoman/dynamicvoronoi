@@ -2,7 +2,7 @@
 #define _PRIORITYQUEUE2_H_
 
 #define MAXDIST 1000
-#define RESERVE 64
+//#define RESERVE 64
 
 #include <vector>
 #include <set>
@@ -32,6 +32,8 @@ public:
   INTPOINT pop();
   //! return size of buckets
   int size();
+  //! return all size of buckets
+  int all_size();
 
 private:
   

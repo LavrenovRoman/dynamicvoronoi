@@ -70,7 +70,7 @@ private:
   void setObstacle(int x, int y);
   void removeObstacle(int x, int y);
   inline void checkVoro(int x, int y, int nx, int ny, dataCell& c, dataCell& nc);
-  void recheckVoro();
+  //void recheckVoro();
   void commitAndColorize(bool updateRealDist=true);
   inline void reviveVoroNeighbors(int &x, int &y);
 

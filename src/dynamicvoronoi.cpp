@@ -514,7 +514,7 @@ void DynamicVoronoi::prune() {
 
 DynamicVoronoi::markerMatchResult DynamicVoronoi::markerMatch(int x, int y) {
 		
-  ROS_INFO("DynamicVoronoi::markerMatch()\n");
+  //ROS_INFO("DynamicVoronoi::markerMatch()\n");
 	
   // implementation of connectivity patterns
   bool f[8];
